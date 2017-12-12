@@ -1,0 +1,5 @@
+---
+- hosts: all
+  roles:
+    - {name: matrix_proxy, tags: [proxy]}
+    - {name: matrix_setup, tags: [setup]}

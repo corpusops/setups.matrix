@@ -1,0 +1,75 @@
+---
+# {{ansible_managed}}
+version: '3'
+services:
+  db:
+    image: "{{matrix_pg_image}}"
+    restart: always
+    security_opt: ["seccomp=unconfined"]
+    hostname: "{{matrix_domain}}"
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      - "{{matrix_volumes_hostdir}}/db-reconfigure.yml:/setup/reconfigure.yml:ro"
+  {% for i in matrix_db_volumes %}
+      - "{{i}}"
+  {% endfor %}
+  web:
+    depends_on: [mxisd]
+    image: "{{matrix_image}}"
+    restart: always
+    hostname: "{{matrix_domain}}"
+    environment:
+      - DOCKERIZE_VERSION=v0.6.0
+    ports:
+      - "127.0.0.1:{{matrix_http_port}}:8008"
+      - "127.0.0.1:{{matrix_https_port}}:8448"
+      - "0.0.0.0:8448:8448"
+    entrypoint:
+      - bash
+      - "-c"
+      - >-
+        set -ex;
+        apt update;apt install -y curl postgresql-client;
+        curl -L https://github.com/jwilder/dockerize/releases/download/$$DOCKERIZE_VERSION/dockerize-linux-amd64-$$DOCKERIZE_VERSION.tar.gz
+        | tar xzvf -;
+        ( set +ex;while true;do echo 'select 1'
+        |psql -vON_ERROR_STOP=1
+        'postgres://dbuser:{{matrix_db_password}}@db:5432/db'
+        && touch /ready && break;
+        sleep 1; echo retry db;done; )&
+        ./dockerize -wait "file:///ready" -timeout 300s;
+        exec ./start.sh start
+    volumes:
+  {% for i in matrix_volumes %}
+      - "{{i}}"
+  {% endfor %}
+  riot:
+    depends_on: [web]
+    image: "keachi/riot"
+    restart: always
+    hostname: "{{matrix_riot_hosts[0]}}"
+    environment:
+      - DEFAULT_HS_URL=https://{{matrix_domain}}
+      - DEFAULT_IS_URL=https://{{matrix_mxisd_hosts[0]}}
+    ports:
+      - "127.0.0.1:{{matrix_riot_port}}:8080"
+  mxisd:
+    image: "{{matrix_mxisd_image}}"
+    restart: always
+    hostname: "{{matrix_mxisd_hosts[0]}}"
+    volumes:
+      - "{{matrix_volumes_hostdir}}/matrix-id:/var/mxisd"
+      - "{{matrix_volumes_hostdir}}/matrix-id-conf:/etc/mxisd"
+    ports:
+      - "127.0.0.1:{{matrix_mxisd_port}}:8090"
+  goneb:
+    depends_on: [web]
+    image: "corpusops/go-neb"
+    environment:
+      - BASE_URL=http://localhost:4050
+    restart: always
+    ports:
+      - "127.0.0.1:4050:4050"
+    volumes:
+      - "{{matrix_volumes_hostdir}}/goneb:/data"
+# vim: set ft=sls :

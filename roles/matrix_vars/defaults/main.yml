@@ -1,0 +1,81 @@
+---
+matrix_domain: matrix.foo.net
+matrix_mxisd_domain: matrixid.foo.net
+matrix_riot_domain: riot.foo.net
+matrix_db_password: xxx
+matrix_crt: "{{corpusops_ssl_certs['*.foo.net'][0]}}"
+matrix_key: "{{corpusops_ssl_certs['*.foo.net'][1]}}"
+matrix_ldap_dn: "cn=matrixreader,ou=People,dc=foo,dc=org"
+matrix_ldap_pw: "xxx"
+matrix_dh: |
+  2048-bit DH parameters taken from rfc3526
+  -----BEGIN DH PARAMETERS-----
+  xxx
+  -----END DH PARAMETERS-----
+matrix_signing_key: "ed25519 xxx"
+matrix_macaroon_secret_key: "xxx"
+matrix_ldap_host: "ldap.foo.net"
+matrix_ldap_bdn: "dc=foo,dc=org"
+matrix_ldap_mailattr: "shortMail"
+#
+matrix_tid_servers: [matrix.org, vector.im, riot.im]
+matrix_image: corpusops/docker-matrix:v0.25.1
+matrix_riot_image: keachi/riot
+matrix_mxisd_image: kamax/mxisd
+matrix_pg_image: corpusops/postgresql:9.6.5
+matrix_xforwarded: true
+matrix_compose_project: "compose-matrix"
+matrix_ip: 127.0.0.1
+matrix_http_port: 19000
+matrix_riot_port: 19002
+matrix_mxisd_port: 19003
+matrix_https_port: 19001
+matrix_public_http_port: 80
+matrix_public_https_port: 443
+matrix_pgsql_conf:
+  cops_postgresql__roles:
+    - name: dbuser
+      password: "{{matrix_db_password}}"
+  cops_postgresql__databases:
+    - db: db
+      owner: dbuser
+matrix_hosts: ["{{matrix_domain}}"]
+matrix_mxisd_hosts: ["{{matrix_mxisd_domain}}"]
+matrix_riot_hosts: ["{{matrix_riot_domain}}"]
+matrix_volumes_hostdir: /srv/data/matrix
+matrix_volumes:
+  - "{{matrix_volumes_hostdir}}/matrix-data:/data"
+matrix_db_volumes:
+  - "{{matrix_volumes_hostdir}}/pgsql:/var/lib/postgresql"
+matrix_url_preview_enabled: True
+matrix_enable_metrics: False
+matrix_report_stats: False
+matrix_enable_group_creation: False
+matrix_mxisd:
+  server.name: "{{matrix_mxisd_hosts[0]}}"
+  matrix.domain: "{{matrix_hosts[0]}}"
+  key.path: '/var/mxisd/signing.key'
+  storage.provider.sqlite.database: '/var/mxisd/mxisd.db'
+  ldap.enabled: true
+  ldap.connection.host: "{{matrix_ldap_host}}"
+  ldap.connection.bindDn: "{{matrix_ldap_dn}}"
+  ldap.connection.bindPassword: "{{matrix_ldap_pw}}"
+  ldap.connection.baseDn: "{{matrix_ldap_bdn}}"
+  ldap.connection.tls: false
+  ldap.connection.port: 389
+  ldap.filter: "(objectClass=person)"
+  ldap.attribute.uid.type: 'uid'
+  ldap.attribute.uid.value: 'uid'
+  ldap.attribute.name: 'uid'
+  ldap.attribute.threepid.email: ["{{matrix_ldap_mailattr}}", "mail"]
+matrix_url_preview_ip_range_whitelist: []
+matrix_url_preview_ip_range_blacklist:
+- '127.0.0.0/8'
+- '10.0.0.0/8'
+- '172.16.0.0/12'
+- '192.168.0.0/16'
+- '100.64.0.0/10'
+- '169.254.0.0/16'
+
+
+

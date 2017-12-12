@@ -1,0 +1,72 @@
+---
+- file:
+    path: "{{item}}"
+    mode: "0711"
+    state: directory
+  with_items: "{{matrix_host_dirs}}"
+
+- file:
+    path: "{{item}}"
+    mode: "0711"
+    state: directory
+  with_items:
+    - "{{matrix_volumes_hostdir}}/matrix-id-conf"
+
+- template:
+    src: docker-compose.yml
+    dest: "{{matrix_volumes_hostdir}}/docker-compose.yml"
+    mode: "0644"
+    trim_blocks: false
+
+- template:
+    src: "{{item}}"
+    force: true
+    dest: "{{matrix_volumes_hostdir}}/matrix-data/{{item}}"
+    mode: "{{{}.get(item, '0644')}}"
+    trim_blocks: false
+  with_items:
+    - homeserver.yaml
+    - turnserver.conf
+    - log.config
+
+- template:
+    src: "{{item}}"
+    force: true
+    dest: "{{matrix_volumes_hostdir}}/matrix-id-conf/{{item}}"
+    mode: "0644"
+    trim_blocks: false
+  with_items:
+    - mxisd.yaml
+
+- copy:
+    content: "{{matrix_crt}}"
+    force: true
+    mode: 0644
+    dest: "{{matrix_volumes_hostdir}}/matrix-data/ssl.crt"
+
+- copy:
+    content: "{{matrix_key}}"
+    force: true
+    mode: 0644
+    dest: "{{matrix_volumes_hostdir}}/matrix-data/ssl.key"
+
+- copy:
+    content: "{{matrix_dh}}"
+    force: true
+    mode: 0644
+    dest: "{{matrix_volumes_hostdir}}/matrix-data/tls.dh"
+
+- copy:
+    content: "{{matrix_signing_key}}"
+    force: true
+    mode: 0644
+    dest: "{{matrix_volumes_hostdir}}/matrix-data/signing.key"
+
+- copy:
+    dest: "{{matrix_volumes_hostdir}}/db-reconfigure.yml"
+    mode: "0644"
+    content: |
+      {{matrix_pgsql_conf|to_nice_json}}
+    force: true
+
+

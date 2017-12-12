@@ -1,0 +1,14 @@
+---
+- template:
+    src: pillar.sls
+    dest: /srv/makina-states/pillar/private.pillar.d/matrix.sls
+    mode: "0600"
+  tags: [haproxy]
+- shell: |
+    salt-call -lall --retcode-passthrough \
+      state.sls makina-states.services.proxy.haproxy
+  tags: [haproxy]
+- shell: |
+    salt-call -lall --retcode-passthrough \
+      state.sls makina-states.services.firewall.ms_iptables
+  tags: [ms_iptables]
