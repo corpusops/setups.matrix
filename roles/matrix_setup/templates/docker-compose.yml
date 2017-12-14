@@ -32,6 +32,7 @@ services:
         apt update;apt install -y curl postgresql-client;
         curl -L https://github.com/jwilder/dockerize/releases/download/$$DOCKERIZE_VERSION/dockerize-linux-amd64-$$DOCKERIZE_VERSION.tar.gz
         | tar xzvf -;
+        if [ -f /ready ] ;then rm -f /ready;fi;
         ( set +ex;while true;do echo 'select 1'
         |psql -vON_ERROR_STOP=1
         'postgres://dbuser:{{matrix_db_password}}@db:5432/db'
