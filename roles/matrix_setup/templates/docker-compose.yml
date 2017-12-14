@@ -46,7 +46,7 @@ services:
   {% endfor %}
   riot:
     depends_on: [web]
-    image: "keachi/riot"
+    image: "{{matrix_riot_image}}"
     restart: always
     hostname: "{{matrix_riot_hosts[0]}}"
     environment:
@@ -65,7 +65,7 @@ services:
       - "127.0.0.1:{{matrix_mxisd_port}}:8090"
   goneb:
     depends_on: [web]
-    image: "corpusops/go-neb"
+    image: "{{matrix_goneb_image}}"
     environment:
       - BASE_URL=http://localhost:4050
     restart: always

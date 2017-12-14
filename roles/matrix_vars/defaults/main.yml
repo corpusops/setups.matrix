@@ -23,6 +23,8 @@ matrix_image: corpusops/docker-matrix:v0.25.1
 matrix_riot_image: keachi/riot
 matrix_mxisd_image: kamax/mxisd
 matrix_pg_image: corpusops/postgresql:9.6.5
+matrix_riot_image: corpusops/riot:0.13.3
+matrix_goneb_image: corpusops/go-neb
 matrix_xforwarded: true
 matrix_compose_project: "compose-matrix"
 matrix_ip: 127.0.0.1
