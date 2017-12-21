@@ -1,0 +1,10 @@
+{
+{% set rules = [] %}
+{% for i in matrix_makneb_clients %}
+{% set _ = rules.extend([
+  "iptables -w -A DOCKER-USER -p tcp --dport 4050 -s {0} -j ACCEPT".format(i)]) %}
+{% endfor %}
+{% set _ = rules.extend(
+    ["iptables -w -A DOCKER-USER -p tcp --dport 4050 -j DROP"])  %}
+  "rules": {{ rules|to_json }}
+}

@@ -33,10 +33,11 @@
     src: "{{item}}"
     force: true
     dest: "{{matrix_volumes_hostdir}}/matrix-id-conf/{{item}}"
-    mode: "0644"
+    mode: "{{ item.endswith('sh') and '0755' or '0644' }}"
     trim_blocks: false
   with_items:
     - mxisd.yaml
+    - mxisd_start.sh
 
 - copy:
     content: "{{matrix_crt}}"

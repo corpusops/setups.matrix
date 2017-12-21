@@ -14,7 +14,6 @@ services:
       - "{{i}}"
   {% endfor %}
   web:
-    depends_on: [mxisd]
     image: "{{matrix_image}}"
     restart: always
     hostname: "{{matrix_domain}}"
@@ -45,32 +44,42 @@ services:
       - "{{i}}"
   {% endfor %}
   riot:
-    depends_on: [web]
     image: "{{matrix_riot_image}}"
     restart: always
     hostname: "{{matrix_riot_hosts[0]}}"
     environment:
+      - DOMAINS={{matrix_riot_domain}}
       - DEFAULT_HS_URL=https://{{matrix_domain}}
       - DEFAULT_IS_URL=https://{{matrix_mxisd_hosts[0]}}
+      - INTEGRATIONS_UI_URL={{matrix_integrations_url}}
+      - INTEGRATIONS_REST_URL={{matrix_integrations_api_url}}
     ports:
       - "127.0.0.1:{{matrix_riot_port}}:8080"
   mxisd:
     image: "{{matrix_mxisd_image}}"
     restart: always
+    environment:
+      - CONF_FILE_PATH=/etc/mxisd/mxisd.yaml
     hostname: "{{matrix_mxisd_hosts[0]}}"
+    entrypoint:
+      - sh
+      - -c
+      - >
+        apk update && apk add bash
+        && /mxisd_start.sh
     volumes:
       - "{{matrix_volumes_hostdir}}/matrix-id:/var/mxisd"
+      - "{{matrix_volumes_hostdir}}/matrix-id-conf/mxisd_start.sh:/mxisd_start.sh"
       - "{{matrix_volumes_hostdir}}/matrix-id-conf:/etc/mxisd"
     ports:
       - "127.0.0.1:{{matrix_mxisd_port}}:8090"
   goneb:
-    depends_on: [web]
     image: "{{matrix_goneb_image}}"
     environment:
-      - BASE_URL=http://localhost:4050
+      - BASE_URL=http://localhost:4050"
     restart: always
     ports:
-      - "127.0.0.1:4050:4050"
+      - "{{matrix_makneb_port}}:4050"
     volumes:
       - "{{matrix_volumes_hostdir}}/goneb:/data"
 # vim: set ft=sls :

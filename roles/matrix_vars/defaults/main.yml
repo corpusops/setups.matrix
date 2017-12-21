@@ -2,6 +2,7 @@
 matrix_domain: matrix.foo.net
 matrix_mxisd_domain: matrixid.foo.net
 matrix_riot_domain: riot.foo.net
+matrix_makneb_domain: makneb.foo.net
 matrix_db_password: xxx
 matrix_crt: "{{corpusops_ssl_certs['*.foo.net'][0]}}"
 matrix_key: "{{corpusops_ssl_certs['*.foo.net'][1]}}"
@@ -20,7 +21,6 @@ matrix_ldap_mailattr: "shortMail"
 #
 matrix_tid_servers: [matrix.org, vector.im, riot.im]
 matrix_image: corpusops/docker-matrix:v0.25.1
-matrix_riot_image: keachi/riot
 matrix_mxisd_image: kamax/mxisd
 matrix_pg_image: corpusops/postgresql:9.6.5
 matrix_riot_image: corpusops/riot:0.13.3
@@ -32,6 +32,7 @@ matrix_http_port: 19000
 matrix_riot_port: 19002
 matrix_mxisd_port: 19003
 matrix_https_port: 19001
+matrix_makneb_port: 19004
 matrix_public_http_port: 80
 matrix_public_https_port: 443
 matrix_pgsql_conf:
@@ -44,6 +45,7 @@ matrix_pgsql_conf:
 matrix_hosts: ["{{matrix_domain}}"]
 matrix_mxisd_hosts: ["{{matrix_mxisd_domain}}"]
 matrix_riot_hosts: ["{{matrix_riot_domain}}"]
+matrix_makneb_hosts: ["{{matrix_riot_domain}}"]
 matrix_volumes_hostdir: /srv/data/matrix
 matrix_volumes:
   - "{{matrix_volumes_hostdir}}/matrix-data:/data"
@@ -56,7 +58,8 @@ matrix_enable_group_creation: False
 matrix_mxisd:
   server.name: "{{matrix_mxisd_hosts[0]}}"
   matrix.domain: "{{matrix_hosts[0]}}"
-  key.path: '/var/mxisd/signing.key'
+  # maintained by image
+  key.path: '/var/mxisd/sign.key'
   storage.provider.sqlite.database: '/var/mxisd/mxisd.db'
   ldap.enabled: true
   ldap.connection.host: "{{matrix_ldap_host}}"
@@ -71,6 +74,9 @@ matrix_mxisd:
   ldap.attribute.name: 'uid'
   ldap.attribute.threepid.email: ["{{matrix_ldap_mailattr}}", "mail"]
 matrix_url_preview_ip_range_whitelist: []
+matrix_integrations_url: ""
+matrix_integrations_api_url: ""
+matrix_makneb_clients: [127.0.0.1]
 matrix_url_preview_ip_range_blacklist:
 - '127.0.0.0/8'
 - '10.0.0.0/8'
@@ -78,6 +84,3 @@ matrix_url_preview_ip_range_blacklist:
 - '192.168.0.0/16'
 - '100.64.0.0/10'
 - '169.254.0.0/16'
-
-
-

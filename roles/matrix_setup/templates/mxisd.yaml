@@ -1,2 +1,2 @@
 ---
-{{matrix_mxisd|to_nice_json}}
+{{matrix_mxisd|to_yaml}}

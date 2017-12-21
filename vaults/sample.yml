@@ -20,3 +20,6 @@ matrix_ldap_mailattr: "shortMail"
 matrix_admin:
   login: admin
   password: xxx
+matrix_makneb_clients:
+- 127.0.0.1
+- 1.2.3.4
