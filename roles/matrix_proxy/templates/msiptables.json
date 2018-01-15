@@ -1,8 +1,10 @@
 {
-{% set rules = [] %}
+{% set rules = [
+"iptables -w -t nat -A PREROUTING -p udp -m multiport --dport {coturn_minport}:{coturn_maxport}  -j DNAT --to  {coturn_int_ip}".format(**matrix_vars),
+"iptables -w -t filter -I FORWARD -m state --state new  -d {coturn_int_ip} -m multiport -p udp --dports {coturn_minport}:{coturn_maxport} -j ACCEPT".format(**matrix_vars),
+] %}
 {% for i in matrix_makneb_clients %}
-{% set _ = rules.extend([
-  "iptables -w -A DOCKER-USER -p tcp --dport 4050 -s {0} -j ACCEPT".format(i)]) %}
+{% set _ = rules.extend(["iptables -w -A DOCKER-USER -p tcp --dport 4050 -s {0} -j ACCEPT".format(i)]) %}
 {% endfor %}
 {% set _ = rules.extend(
     ["iptables -w -A DOCKER-USER -p tcp --dport 4050 -j DROP"])  %}

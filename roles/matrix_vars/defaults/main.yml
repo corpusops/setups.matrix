@@ -1,5 +1,9 @@
 ---
+matrix_network: 172.18.0
+matrix_int_ip: "{{matrix_network}}.2"
+matrix_coturn_int_ip: "{{matrix_network}}.9"
 matrix_domain: matrix.foo.net
+matrix_coturn_domain: coturn.foo.net
 matrix_mxisd_domain: matrixid.foo.net
 matrix_riot_domain: riot.foo.net
 matrix_makneb_domain: makneb.foo.net
@@ -20,10 +24,11 @@ matrix_ldap_bdn: "dc=foo,dc=org"
 matrix_ldap_mailattr: "shortMail"
 #
 matrix_tid_servers: [matrix.org, vector.im, riot.im]
-matrix_image: corpusops/docker-matrix:v0.25.1
+matrix_image: corpusops/docker-matrix:v0.26.0
+matrix_coturn_image: corpusops/docker-coturn:4.5.0.7
 matrix_mxisd_image: kamax/mxisd
 matrix_pg_image: corpusops/postgresql:9.6.5
-matrix_riot_image: corpusops/riot:0.13.3
+matrix_riot_image: corpusops/riot:0.13.4
 matrix_goneb_image: corpusops/go-neb
 matrix_xforwarded: true
 matrix_compose_project: "compose-matrix"
@@ -49,6 +54,8 @@ matrix_makneb_hosts: ["{{matrix_riot_domain}}"]
 matrix_volumes_hostdir: /srv/data/matrix
 matrix_volumes:
   - "{{matrix_volumes_hostdir}}/matrix-data:/data"
+matrix_coturn_volumes:
+  - "{{matrix_volumes_hostdir}}/coturn-data:/data"
 matrix_db_volumes:
   - "{{matrix_volumes_hostdir}}/pgsql:/var/lib/postgresql"
 matrix_url_preview_enabled: True
@@ -74,6 +81,10 @@ matrix_mxisd:
   ldap.attribute.name: 'uid'
   ldap.attribute.threepid.email: ["{{matrix_ldap_mailattr}}", "mail"]
 matrix_url_preview_ip_range_whitelist: []
+matrix_coturn_secret: "supercret64chars"
+matrix_coturn_realm: "{{ansible_domain}}"
+matrix_coturn_crt: "{{matrix_crt}}"
+matrix_coturn_key: "{{matrix_key}}"
 matrix_integrations_url: ""
 matrix_integrations_api_url: ""
 matrix_makneb_clients: [127.0.0.1]
@@ -84,3 +95,24 @@ matrix_url_preview_ip_range_blacklist:
 - '192.168.0.0/16'
 - '100.64.0.0/10'
 - '169.254.0.0/16'
+matrix_externalip: ""
+matrix_coturn: true
+matrix_coturn_port: 3478
+matrix_coturn_altport: 3479
+matrix_coturn_tlsport: 5349
+matrix_coturn_alttlsport: 5350
+matrix_coturn_minport: 49152
+matrix_coturn_maxport: 65535
+matrix_coturn_dh_file: "/data/{{matrix_domain}}.tls.dh"
+matrix_coturn_notcprelay: true
+matrix_coturn_quota: 4000
+matrix_coturn_userquota: 40
+matrix_coturn_deniedip: []
+#- 10.0.0.0-10.255.255.255
+#- 192.168.0.0-192.168.255.255
+#- 172.16.0.0-172.31.255.255
+matrix_coturn_user_lifetime: 86400000
+matrix_turn_uris:
+- "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=udp"
+- "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=tcp"
+matrix_coturn_notls1: true

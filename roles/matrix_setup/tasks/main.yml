@@ -1,12 +1,13 @@
 ---
-- include_role:
-    name: corpusops.roles/services_virt_docker
+- include_role: {name: corpusops.roles/services_virt_docker}
   tags: [docker_setup]
 
 - set_fact:
     matrix_host_dirs: |
         {% set directories = [] %}
-        {% for matrix_volume in matrix_volumes+matrix_db_volumes %}
+        {% for matrix_volume in (matrix_coturn_volumes+
+                                 matrix_volumes+
+                                 matrix_db_volumes) %}
         {% set d = matrix_volume.split(':')[0] %}
         {% set _ = directories.append(d) %}
         {% endfor %}

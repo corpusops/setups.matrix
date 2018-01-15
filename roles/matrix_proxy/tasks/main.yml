@@ -10,15 +10,15 @@
   tags: [haproxy]
 - file:
     state: absent
-    dest: /etc/ms_iptables.d/makneb.json
+    dest: /etc/ms_iptables.d/matrix.json
   tags: [ms_iptables]
-  when: not matrix_makneb_clients
+  when: matrix_makneb_clients or matrix_coturn
 - template:
-    dest: /etc/ms_iptables.d/makneb.json
+    dest: /etc/ms_iptables.d/matrix.json
     src: msiptables.json
     mode: "0644"
   tags: [ms_iptables]
-  when: matrix_makneb_clients
+  when: matrix_makneb_clients or matrix_coturn
 - shell: |
     salt-call -lall --retcode-passthrough \
       state.sls makina-states.services.firewall.ms_iptables
