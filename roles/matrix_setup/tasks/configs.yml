@@ -40,6 +40,15 @@
 - template:
     src: "{{item}}"
     force: true
+    dest: "{{matrix_volumes_hostdir}}/backup/setup/{{item}}"
+    mode: "{{ item.endswith('sh') and '0755' or '0644' }}"
+    trim_blocks: false
+  with_items:
+    - reconfigure.yml
+
+- template:
+    src: "{{item}}"
+    force: true
     dest: "{{matrix_volumes_hostdir}}/matrix-id-conf/{{item}}"
     mode: "{{ item.endswith('sh') and '0755' or '0644' }}"
     trim_blocks: false

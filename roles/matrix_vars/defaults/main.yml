@@ -30,6 +30,7 @@ matrix_mxisd_image: kamax/mxisd
 matrix_pg_image: corpusops/postgresql:9.6.5
 matrix_riot_image: corpusops/riot:0.13.4
 matrix_goneb_image: corpusops/go-neb
+matrix_backup_image: corpusops/dbsmartbackup:3
 matrix_xforwarded: true
 matrix_compose_project: "compose-matrix"
 matrix_ip: 127.0.0.1
@@ -58,6 +59,10 @@ matrix_coturn_volumes:
   - "{{matrix_volumes_hostdir}}/coturn-data:/data"
 matrix_db_volumes:
   - "{{matrix_volumes_hostdir}}/pgsql:/var/lib/postgresql"
+matrix_backup_volumes:
+  - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  - "{{matrix_volumes_hostdir}}/backup/data:/srv/backups"
+  - "{{matrix_volumes_hostdir}}/backup/setup/reconfigure.yml:/setup/reconfigure.yml:ro"
 matrix_url_preview_enabled: True
 matrix_enable_metrics: False
 matrix_report_stats: False
@@ -116,3 +121,4 @@ matrix_turn_uris:
 - "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=udp"
 - "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=tcp"
 matrix_coturn_notls1: true
+matrix_db_ip: "{{matrix_network}}.8"

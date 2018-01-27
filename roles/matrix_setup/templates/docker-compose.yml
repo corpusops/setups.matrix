@@ -40,10 +40,7 @@ services:
       - >-
         set -ex;
         exec ./start.sh start
-    volumes:
-  {% for i in matrix_coturn_volumes %}
-      - "{{i}}"
-  {% endfor %}
+    volumes: {{ matrix_coturn_volumes | to_nice_json }}
   web:
     networks: {app_net: {ipv4_address: "{{matrix_int_ip}}"}}
     extra_hosts:
@@ -119,4 +116,9 @@ services:
       - "{{matrix_makneb_port}}:4050"
     volumes:
       - "{{matrix_volumes_hostdir}}/goneb:/data"
+  backup:
+    image: "{{matrix_backup_image}}"
+    networks: {app_net: {ipv4_address: "{{matrix_network}}.10"}}
+    restart: always
+    volumes: {{ matrix_backup_volumes | to_nice_json }}
 # vim: set ft=sls :
