@@ -86,7 +86,7 @@ web_client: True
 # web_client_location: "/path/to/web/root"
 
 # The public-facing base URL for the client API (not including _matrix/...)
-# public_baseurl: https://example.com:8448/
+public_baseurl: "https://{{matrix_domain}}"
 
 # Set the soft limit on the number of file descriptors synapse can use
 # Zero is used to indicate synapse should set the soft limit to the
@@ -596,3 +596,7 @@ enable_group_creation: {{matrix_enable_group_creation}}
 # If enabled, non server admins can only create groups with local parts
 # starting with this prefix
 # group_creation_prefix: "unofficial/
+
+{% if matrix_email_enable_notifs %}
+email: {{matrix_email|to_json}}
+{% endif %}

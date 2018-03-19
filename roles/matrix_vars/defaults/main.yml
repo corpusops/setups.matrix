@@ -122,3 +122,21 @@ matrix_turn_uris:
 - "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=tcp"
 matrix_coturn_notls1: true
 matrix_db_ip: "{{matrix_network}}.8"
+matrix_email:
+  enable_notifs: true
+  smtp_host: 'mail.foo.net'
+  smtp_port: 587
+  notif_from: 'foo matrix <sysadmin@foo.com>'
+  notif_for_new_users: true
+  smtp_auth: true
+  smtp_user: 'bar@foo.com'
+  smtp_pass: 'xxx'
+  riot_base_url: 'https://matrix.foo.com'
+  require_transport_security: true
+	# copy the content of
+	# -> https://github.com/matrix-org/synapse/tree/master/res
+	# to /data volume
+  template_dir: "/data/res/templates"
+  notif_template_html: "notif_mail.html"
+  notif_template_text: "notif_mail.txt"
+
