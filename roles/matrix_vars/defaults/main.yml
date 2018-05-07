@@ -1,4 +1,8 @@
 ---
+matrix_image: "corpusops/docker-matrix:v0.28.1"
+matrix_riot_image: "corpusops/riot:0.15.0-rc.3"
+matrix_mxisd_image: kamax/mxisd
+matrix_pg_image: corpusops/postgresql:9.6.5
 matrix_network: 172.18.0
 matrix_int_ip: "{{matrix_network}}.2"
 matrix_coturn_int_ip: "{{matrix_network}}.9"
@@ -24,15 +28,11 @@ matrix_ldap_bdn: "dc=foo,dc=org"
 matrix_ldap_mailattr: "shortMail"
 #
 matrix_tid_servers: [matrix.org, vector.im, riot.im]
-matrix_image: corpusops/docker-matrix:v0.26.0
-matrix_coturn_image: corpusops/docker-coturn:4.5.0.7
-matrix_mxisd_image: kamax/mxisd
-matrix_pg_image: corpusops/postgresql:9.6.5
-matrix_riot_image: corpusops/riot:0.13.4
 matrix_goneb_image: corpusops/go-neb
 matrix_backup_image: corpusops/dbsmartbackup:3
 matrix_xforwarded: true
 matrix_compose_project: "compose-matrix"
+matrix_coturn_image: corpusops/docker-coturn:4.5.0.7
 matrix_ip: 127.0.0.1
 matrix_http_port: 19000
 matrix_riot_port: 19002
