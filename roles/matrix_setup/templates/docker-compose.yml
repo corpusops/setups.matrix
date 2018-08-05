@@ -12,12 +12,7 @@ services:
     restart: always
     security_opt: ["seccomp=unconfined"]
     hostname: "{{matrix_domain}}"
-    volumes:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-      - "{{matrix_volumes_hostdir}}/db-reconfigure.yml:/setup/reconfigure.yml:ro"
-  {% for i in matrix_db_volumes %}
-      - "{{i}}"
-  {% endfor %}
+    volumes: {{ matrix_db_volumes | to_nice_json }}
   coturn:
     networks: {app_net: {ipv4_address: "{{matrix_coturn_int_ip}}"}}
     extra_hosts:
@@ -70,21 +65,20 @@ services:
         sleep 1; echo retry db;done; )&
         ./dockerize -wait "file:///ready" -timeout 300s;
         exec ./start.sh start
-    volumes:
-  {% for i in matrix_volumes %}
-      - "{{i}}"
-  {% endfor %}
+    volumes: {{  matrix_volumes |to_nice_json }}
   riot:
     image: "{{matrix_riot_image}}"
     restart: always
     hostname: "{{matrix_riot_hosts[0]}}"
     networks: {app_net: {ipv4_address: "{{matrix_network}}.3"}}
     environment:
-      - DOMAINS={{matrix_riot_domain}}
-      - DEFAULT_HS_URL=https://{{matrix_domain}}
-      - DEFAULT_IS_URL=https://{{matrix_mxisd_hosts[0]}}
-      - INTEGRATIONS_UI_URL={{matrix_integrations_url}}
-      - INTEGRATIONS_REST_URL={{matrix_integrations_api_url}}
+      - "DOMAINS={{matrix_riot_domain}}"
+      - "DEFAULT_HS_URL=https://{{matrix_domain}}"
+      - "DEFAULT_IS_URL=https://{{matrix_mxisd_hosts[0]}}"
+      - "INTEGRATIONS_UI_URL={{matrix_integrations_url}}"
+      - "INTEGRATIONS_REST_URL={{matrix_integrations_api_url}}"
+      - "INTEGRATIONS_WIDGETS_URL={{matrix_integrations_widgets_urls|to_json}}"
+      - "INTEGRATIONS_WIDGETSJITSI_URL={{matrix_integrations_jitsi_widgets_url}}"
     ports:
       - "127.0.0.1:{{matrix_riot_port}}:8080"
   mxisd:
@@ -100,25 +94,29 @@ services:
       - >
         apk update && apk add bash
         && /mxisd_start.sh
-    volumes:
-      - "{{matrix_volumes_hostdir}}/matrix-id:/var/mxisd"
-      - "{{matrix_volumes_hostdir}}/matrix-id-conf/mxisd_start.sh:/mxisd_start.sh"
-      - "{{matrix_volumes_hostdir}}/matrix-id-conf:/etc/mxisd"
+    volumes: {{matrix_mxisd_volumes| to_nice_json}}
     ports:
       - "127.0.0.1:{{matrix_mxisd_port}}:8090"
   goneb:
     image: "{{matrix_goneb_image}}"
     networks: {app_net: {ipv4_address: "{{matrix_network}}.5"}}
     environment:
-      - BASE_URL=http://localhost:4050"
+      - "BASE_URL=http://localhost:4050"
     restart: always
     ports:
       - "{{matrix_makneb_port}}:4050"
-    volumes:
-      - "{{matrix_volumes_hostdir}}/goneb:/data"
+    volumes: {{matrix_goneb_volumes| to_nice_json}}
   backup:
     image: "{{matrix_backup_image}}"
     networks: {app_net: {ipv4_address: "{{matrix_network}}.10"}}
     restart: always
     volumes: {{ matrix_backup_volumes | to_nice_json }}
+  dimension:
+    image: "{{matrix_dimension_image}}"
+    networks: {app_net: {ipv4_address: "{{matrix_network}}.11"}}
+    environment: []
+    restart: always
+    ports:
+      - "{{matrix_dimension_port}}:8184"
+    volumes: {{matrix_dimension_volumes| to_nice_json}}
 # vim: set ft=sls :

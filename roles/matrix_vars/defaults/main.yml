@@ -1,6 +1,7 @@
 ---
 matrix_image: "corpusops/docker-matrix:v0.33.2rc1"
 matrix_riot_image: "corpusops/riot:0.16.0"
+matrix_dimension_image: "corpusops/matrix-dimension:latest"
 matrix_mxisd_image: kamax/mxisd
 matrix_pg_image: corpusops/postgresql:9.6.5
 matrix_network: 172.18.0
@@ -10,6 +11,7 @@ matrix_domain: matrix.foo.net
 matrix_coturn_domain: coturn.foo.net
 matrix_mxisd_domain: matrixid.foo.net
 matrix_riot_domain: riot.foo.net
+matrix_dimension_domain: dimension.foo.net
 matrix_makneb_domain: makneb.foo.net
 matrix_db_password: xxx
 matrix_crt: "{{corpusops_ssl_certs['*.foo.net'][0]}}"
@@ -39,6 +41,7 @@ matrix_riot_port: 19002
 matrix_mxisd_port: 19003
 matrix_https_port: 19001
 matrix_makneb_port: 19004
+matrix_dimension_port: 19005
 matrix_public_http_port: 80
 matrix_public_https_port: 443
 matrix_pgsql_conf:
@@ -49,15 +52,26 @@ matrix_pgsql_conf:
     - db: db
       owner: dbuser
 matrix_hosts: ["{{matrix_domain}}"]
+matrix_dimension_hosts: ["{{matrix_dimension_domain}}"]
 matrix_mxisd_hosts: ["{{matrix_mxisd_domain}}"]
 matrix_riot_hosts: ["{{matrix_riot_domain}}"]
 matrix_makneb_hosts: ["{{matrix_riot_domain}}"]
 matrix_volumes_hostdir: /srv/data/matrix
+matrix_dimension_volumes:
+  - "{{matrix_volumes_hostdir}}/dimension:/data"
+matrix_mxisd_volumes:
+  - "{{matrix_volumes_hostdir}}/matrix-id:/var/mxisd"
+  - "{{matrix_volumes_hostdir}}/matrix-id-conf/mxisd_start.sh:/mxisd_start.sh"
+  - "{{matrix_volumes_hostdir}}/matrix-id-conf:/etc/mxisd"
 matrix_volumes:
   - "{{matrix_volumes_hostdir}}/matrix-data:/data"
 matrix_coturn_volumes:
   - "{{matrix_volumes_hostdir}}/coturn-data:/data"
+matrix_goneb_volumes:
+  - "{{matrix_volumes_hostdir}}/goneb:/data"
 matrix_db_volumes:
+  - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  - "{{matrix_volumes_hostdir}}/db-reconfigure.yml:/setup/reconfigure.yml:ro"
   - "{{matrix_volumes_hostdir}}/pgsql:/var/lib/postgresql"
 matrix_backup_volumes:
   - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
@@ -90,8 +104,6 @@ matrix_coturn_secret: "supercret64chars"
 matrix_coturn_realm: "{{ansible_domain}}"
 matrix_coturn_crt: "{{matrix_crt}}"
 matrix_coturn_key: "{{matrix_key}}"
-matrix_integrations_url: ""
-matrix_integrations_api_url: ""
 matrix_makneb_clients: [127.0.0.1]
 matrix_url_preview_ip_range_blacklist:
 - '127.0.0.0/8'
@@ -139,4 +151,23 @@ matrix_email:
   template_dir: "/data/res/templates"
   notif_template_html: "notif_mail.html"
   notif_template_text: "notif_mail.txt"
+matrix_dimension_hs: "{{matrix_domain}}"
+matrix_dimension_client_server_url: "https://{{matrix_domain}}"
+matrix_dimension_access_token: "xxxxxx"
+matrix_dimension_federation_url: null
+matrix_dimension_media_url: null
+matrix_dimension_admins: []
+matrix_dimension_widget_blacklist:
+- 10.0.0.0/8
+- 172.16.0.0/12
+- 192.168.0.0/16
+- 127.0.0.0/8
 
+matrix_integrations_url:               ""
+matrix_integrations_api_url:           ""
+matrix_integrations_widgets_urls:      ""
+matrix_integrations_jitsi_widgets_url: ""
+# matrix_integrations_url:                "https://{{matrix_dimension_domain}}/riot"
+# matrix_integrations_api_url:            "https://{{matrix_dimension_domain}}/api/v1/scalar"
+# matrix_integrations_widgets_urls:      ["https://{{matrix_dimension_domain}}/widgets"]
+# matrix_integrations_jitsi_widgets_url:  "https://{{matrix_dimension_domain}}/widgets/jitsi"

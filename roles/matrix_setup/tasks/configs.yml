@@ -13,6 +13,12 @@
     - "{{matrix_volumes_hostdir}}/matrix-id-conf"
 
 - template:
+    src: dimension.yml
+    dest: "{{matrix_volumes_hostdir}}/dimension/config.yml"
+    mode: "0644"
+    trim_blocks: false
+
+- template:
     src: docker-compose.yml
     dest: "{{matrix_volumes_hostdir}}/docker-compose.yml"
     mode: "0644"
