@@ -1,6 +1,6 @@
 ---
-matrix_image: "corpusops/docker-matrix:v0.28.1"
-matrix_riot_image: "corpusops/riot:0.15.0-rc.3"
+matrix_image: "corpusops/docker-matrix:v0.33.2rc1"
+matrix_riot_image: "corpusops/riot:0.16.0"
 matrix_mxisd_image: kamax/mxisd
 matrix_pg_image: corpusops/postgresql:9.6.5
 matrix_network: 172.18.0
@@ -133,9 +133,9 @@ matrix_email:
   smtp_pass: 'xxx'
   riot_base_url: 'https://matrix.foo.com'
   require_transport_security: true
-	# copy the content of
-	# -> https://github.com/matrix-org/synapse/tree/master/res
-	# to /data volume
+  # copy the content of
+  # -> https://github.com/matrix-org/synapse/tree/master/res
+  # to /data volume
   template_dir: "/data/res/templates"
   notif_template_html: "notif_mail.html"
   notif_template_text: "notif_mail.txt"

@@ -2,16 +2,18 @@
 - set_fact:
     matrix_host_dirs: |
         {% set directories = [] %}
-        {% for matrix_volume in (matrix_coturn_volumes+
-                                 matrix_volumes+
-                                 matrix_backup_volumes+
-                                 matrix_db_volumes) %}
+        {% for matrix_volume in (
+          matrix_coturn_volumes+
+          matrix_volumes+
+          matrix_backup_volumes+
+          matrix_db_volumes) %}
         {% set d = matrix_volume.split(':')[0] %}
-        {% if d.endswith(('.conf', '.yml', '.ini', '.json'))
-              and not d.startswith(('/sys/'))%}
+        {% if d.endswith(('.conf', '.yml', '.ini', '.json')) %}
         {% set d = d | copsf_dirname %}
         {% endif %}
+        {% if not d.startswith('/sys/')%}
         {% set _ = directories.append(d) %}
+        {% endif %}
         {% endfor %}
         {{ directories | to_json }}
 

@@ -597,6 +597,6 @@ enable_group_creation: {{matrix_enable_group_creation}}
 # starting with this prefix
 # group_creation_prefix: "unofficial/
 
-{% if matrix_email_enable_notifs %}
+{% if matrix_email.enable_notifs %}
 email: {{matrix_email|to_json}}
 {% endif %}
