@@ -57,8 +57,9 @@ matrix_mxisd_hosts: ["{{matrix_mxisd_domain}}"]
 matrix_riot_hosts: ["{{matrix_riot_domain}}"]
 matrix_makneb_hosts: ["{{matrix_riot_domain}}"]
 matrix_volumes_hostdir: /srv/data/matrix
+matrix_dimension_data: "{{matrix_volumes_hostdir}}/dimension"
 matrix_dimension_volumes:
-  - "{{matrix_volumes_hostdir}}/dimension:/data"
+  - "{{matrix_dimension_data}}:/data"
 matrix_mxisd_volumes:
   - "{{matrix_volumes_hostdir}}/matrix-id:/var/mxisd"
   - "{{matrix_volumes_hostdir}}/matrix-id-conf/mxisd_start.sh:/mxisd_start.sh"

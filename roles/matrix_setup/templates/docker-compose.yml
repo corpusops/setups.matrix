@@ -77,7 +77,8 @@ services:
       - "DEFAULT_IS_URL=https://{{matrix_mxisd_hosts[0]}}"
       - "INTEGRATIONS_UI_URL={{matrix_integrations_url}}"
       - "INTEGRATIONS_REST_URL={{matrix_integrations_api_url}}"
-      - "INTEGRATIONS_WIDGETS_URL={{matrix_integrations_widgets_urls|to_json}}"
+      - >-
+        INTEGRATIONS_WIDGETS_URL={{matrix_integrations_widgets_urls|to_json}}
       - "INTEGRATIONS_WIDGETSJITSI_URL={{matrix_integrations_jitsi_widgets_url}}"
     ports:
       - "127.0.0.1:{{matrix_riot_port}}:8080"

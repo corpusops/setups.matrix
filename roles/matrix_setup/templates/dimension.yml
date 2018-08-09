@@ -35,11 +35,11 @@ homeserver:
 
 # These users can modify the integrations this Dimension supports.
 # To access the admin interface, open Dimension in Riot and click the settings icon.
-admins: {{matrix_dimension_admins|to_json}}
+admins: {{matrix_dimension_admins|to_nice_json}}
 
 # IPs and CIDR ranges listed here will be blocked from being widgets.
 # Note: Widgets may still be embedded with restricted content, although not through Dimension directly.
-widgetBlacklist: {{matrix_dimension_widget_blacklist|to_json}}
+widgetBlacklist: {{matrix_dimension_widget_blacklist|to_nice_json}}
 #  - 10.0.0.0/8
 #  - 172.16.0.0/12
 #  - 192.168.0.0/16

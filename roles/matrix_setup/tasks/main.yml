@@ -3,7 +3,6 @@
     matrix_host_dirs: |
         {% set directories = [] %}
         {% for matrix_volume in (matrix_coturn_volumes+
-                                 matrix_dimension_volumes+
                                  matrix_volumes+
                                  matrix_backup_volumes+
                                  matrix_db_volumes) %}

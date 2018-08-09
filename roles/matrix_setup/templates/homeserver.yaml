@@ -442,7 +442,7 @@ room_invite_state_types:
 
 
 # A list of application service config file to use
-app_service_config_files: []
+app_service_config_files: {{matrix_app_service_config_files|to_nice_json}}
 
 
 macaroon_secret_key: "{{matrix_macaroon_secret_key}}"

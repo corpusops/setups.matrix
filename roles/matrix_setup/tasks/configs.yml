@@ -12,10 +12,17 @@
   with_items:
     - "{{matrix_volumes_hostdir}}/matrix-id-conf"
 
+# 1000: uid of node inside the image
+- file:
+    dest: "{{matrix_dimension_data}}/dimension"
+    mode: "0751"
+    owner: 1000
+    state: directory
 - template:
     src: dimension.yml
-    dest: "{{matrix_volumes_hostdir}}/dimension/config.yml"
+    dest: "{{matrix_volumes_hostdir}}/dimension/config.yaml"
     mode: "0644"
+    owner: 1000
     trim_blocks: false
 
 - template:
