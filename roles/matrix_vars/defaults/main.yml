@@ -164,6 +164,7 @@ matrix_dimension_widget_blacklist:
 - 192.168.0.0/16
 - 127.0.0.0/8
 
+matrix_app_service_config_files: []
 matrix_integrations_url:               ""
 matrix_integrations_api_url:           ""
 matrix_integrations_widgets_urls:      ""
