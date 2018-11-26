@@ -164,6 +164,10 @@ matrix_dimension_widget_blacklist:
 - 192.168.0.0/16
 - 127.0.0.0/8
 
+matrix_log_level: "ERROR"
+matrix_log_level_storage: "{{matrix_log_level}}"
+matrix_log_level_synapse: "WARN"
+matrix_log_level_root: "{{matrix_log_level}}"
 matrix_app_service_config_files: []
 matrix_integrations_url:               ""
 matrix_integrations_api_url:           ""
