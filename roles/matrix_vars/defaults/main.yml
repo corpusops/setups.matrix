@@ -62,8 +62,8 @@ matrix_dimension_volumes:
   - "{{matrix_dimension_data}}:/data"
 matrix_mxisd_volumes:
   - "{{matrix_volumes_hostdir}}/matrix-id:/var/mxisd"
-  - "{{matrix_volumes_hostdir}}/matrix-id-conf/mxisd_start.sh:/mxisd_start.sh"
   - "{{matrix_volumes_hostdir}}/matrix-id-conf:/etc/mxisd"
+#  - "{{matrix_volumes_hostdir}}/matrix-id-conf/mxisd_start.sh:/mxisd_start.sh"
 matrix_volumes:
   - "{{matrix_volumes_hostdir}}/matrix-data:/data"
 matrix_coturn_volumes:
@@ -83,23 +83,32 @@ matrix_enable_metrics: False
 matrix_report_stats: False
 matrix_enable_group_creation: False
 matrix_mxisd:
-  server.name: "{{matrix_mxisd_hosts[0]}}"
-  matrix.domain: "{{matrix_hosts[0]}}"
+  server:
+    name: "{{matrix_mxisd_hosts[0]}}"
+  matrix:
+    domain: "{{matrix_hosts[0]}}"
   # maintained by image
-  key.path: '/var/mxisd/sign.key'
-  storage.provider.sqlite.database: '/var/mxisd/mxisd.db'
-  ldap.enabled: true
-  ldap.connection.host: "{{matrix_ldap_host}}"
-  ldap.connection.bindDn: "{{matrix_ldap_dn}}"
-  ldap.connection.bindPassword: "{{matrix_ldap_pw}}"
-  ldap.connection.baseDn: "{{matrix_ldap_bdn}}"
-  ldap.connection.tls: false
-  ldap.connection.port: 389
-  ldap.filter: "(objectClass=person)"
-  ldap.attribute.uid.type: 'uid'
-  ldap.attribute.uid.value: 'uid'
-  ldap.attribute.name: 'uid'
-  ldap.attribute.threepid.email: ["{{matrix_ldap_mailattr}}", "mail"]
+  key:
+    path: '/var/mxisd/sign.key'
+  storage:
+    provider:
+      sqlite:
+        database: '/var/mxisd/mxisd.db'
+  ldap:
+    enabled: true
+    connection:
+      host: "{{matrix_ldap_host}}"
+      bindDn: "{{matrix_ldap_dn}}"
+      bindPassword: "{{matrix_ldap_pw}}"
+      baseDn: "{{matrix_ldap_bdn}}"
+      tls: false
+      port: 389
+    filter: "(objectClass=person)"
+    attribute:
+      uid.type: 'uid'
+      uid.value: 'uid'
+      name: 'uid'
+      threepid.email: ["{{matrix_ldap_mailattr}}", "mail"]
 matrix_url_preview_ip_range_whitelist: []
 matrix_coturn_secret: "supercret64chars"
 matrix_coturn_realm: "{{ansible_domain}}"

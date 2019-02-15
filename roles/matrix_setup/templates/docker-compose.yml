@@ -89,12 +89,12 @@ services:
     environment:
       - CONF_FILE_PATH=/etc/mxisd/mxisd.yaml
     hostname: "{{matrix_mxisd_hosts[0]}}"
-    entrypoint:
-      - sh
-      - -c
-      - >
-        apk update && apk add bash
-        && /mxisd_start.sh
+    #entrypoint:
+    #  - sh
+    #  - -c
+    #  - >
+    #    apk update && apk add bash
+    #    && /mxisd_start.sh
     volumes: {{matrix_mxisd_volumes| to_nice_json}}
     ports:
       - "127.0.0.1:{{matrix_mxisd_port}}:8090"
