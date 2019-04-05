@@ -1,6 +1,6 @@
 ---
-matrix_image: "corpusops/docker-matrix:v0.99.1.1"
-matrix_riot_image: "corpusops/riot:1.0.1"
+matrix_image: "corpusops/docker-matrix:v0.99.3"
+matrix_riot_image: "corpusops/riot:1.0.6"
 matrix_dimension_image: "corpusops/matrix-dimension:latest"
 matrix_mxisd_image: kamax/mxisd
 matrix_pg_image: corpusops/postgresql:9.6.5
