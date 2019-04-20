@@ -1,11 +1,6 @@
 # docker based matrix fullstack deployment using ansible
 See playbooks, set your variables and enjoy
 
-# Support development
-- [paypal](https://paypal.me/kiorky)
-
-
-
 # emergency monitoring, put matrix in foreground
 Login into matrix container
 
