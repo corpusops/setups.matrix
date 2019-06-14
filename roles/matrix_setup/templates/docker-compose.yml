@@ -54,6 +54,7 @@ services:
       - "-c"
       - >-
         set -ex;
+        cp -frnv /usr/local/lib/python*/*-packages/synapse/res/templates/* /data/res/templates/;
         apt update;apt install -y curl postgresql-client;
         curl -L https://github.com/jwilder/dockerize/releases/download/$$DOCKERIZE_VERSION/dockerize-linux-amd64-$$DOCKERIZE_VERSION.tar.gz
         | tar xzvf -;
