@@ -66,8 +66,7 @@
     mode: "{{ item.endswith('sh') and '0755' or '0644' }}"
     trim_blocks: false
   with_items:
-    - mxisd.yaml
-    - mxisd_start.sh
+    - ma1sd.yaml
 
 - copy:
     content: "{{matrix_dh}}"

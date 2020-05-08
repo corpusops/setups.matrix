@@ -83,12 +83,12 @@ services:
       - "INTEGRATIONS_WIDGETSJITSI_URL={{matrix_integrations_jitsi_widgets_url}}"
     ports:
       - "127.0.0.1:{{matrix_riot_port}}:8080"
-  mxisd:
-    image: "{{matrix_mxisd_image}}"
+  ma1sd:
+    image: "{{matrix_ma1sd_image}}"
     restart: always
     networks: {app_net: {ipv4_address: "{{matrix_network}}.4"}}
     environment:
-      - CONF_FILE_PATH=/etc/mxisd/mxisd.yaml
+    - "MATRIX_DOMAIN={{matrix_hosts[0]}}"
     hostname: "{{matrix_mxisd_hosts[0]}}"
     #entrypoint:
     #  - sh
@@ -113,6 +113,13 @@ services:
     networks: {app_net: {ipv4_address: "{{matrix_network}}.10"}}
     restart: always
     volumes: {{ matrix_backup_volumes | to_nice_json }}
+    environment:
+    - "DBNAMES=db"
+    - "POSTGRES_USER=dbuser"
+    - "POSTGRES_PASSWORD={{matrix_db_password}}"
+    - "POSTGRES_HOST={{matrix_db_ip}}"
+    - "POSTGRES_PORT=5432"
+    - "COMP={{matrix_dbs_compression}}"
   dimension:
     image: "{{matrix_dimension_image}}"
     networks: {app_net: {ipv4_address: "{{matrix_network}}.11"}}
