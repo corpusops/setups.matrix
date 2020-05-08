@@ -198,7 +198,7 @@ event_cache_size: "10K"
 verbose: 0
 
 # File to write logging to. Ignored if log_config is specified.
-log_file: "/data/homeserver.log"
+# log_file: "/data/homeserver.log"
 
 # A yaml python logging config file
 log_config: "/data/log.config"
