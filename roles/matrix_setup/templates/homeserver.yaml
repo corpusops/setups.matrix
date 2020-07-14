@@ -545,7 +545,7 @@ password_config:
 password_providers:
   - module: "rest_auth_provider.RestAuthProvider"
     config:
-      endpoint: "http://mxisd:8090"
+      endpoint: "http://ma1sd:8090"
 
 # password_providers:
 #     - module: "ldap_auth_provider.LdapAuthProvider"
