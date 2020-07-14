@@ -113,32 +113,31 @@ matrix_mxisd:
       name: 'uid'
       threepid.email: ["{{matrix_ldap_mailattr}}", "mail"]
 matrix_ma1sd:
-  server:
-    name: "{{matrix_mxisd_hosts[0]}}"
-  matrix:
-    domain: "{{matrix_hosts[0]}}"
-  # maintained by image
   key:
     path: '/var/ma1sd/sign.key'
+  matrix:
+    domain: "{{matrix_hosts[0]}}"
+  server:
+    name: "{{matrix_mxisd_hosts[0]}}"
   storage:
     provider:
       sqlite:
-        database: '/var/ma1sd/mxisd.db'
+        database: '/var/ma1sd/ma1sd.db'
   ldap:
-    enabled: true
+    attribute:
+      name: uid
+      threepid:
+        email: ["{{matrix_ldap_mailattr}}", "mail"]
+      uid: {type: uid, value: uid}
     connection:
-      host: "{{matrix_ldap_host}}"
+      baseDn: "{{matrix_ldap_bdn}}"
       bindDn: "{{matrix_ldap_dn}}"
       bindPassword: "{{matrix_ldap_pw}}"
-      baseDn: "{{matrix_ldap_bdn}}"
-      tls: false
+      host: "{{matrix_ldap_host}}"
       port: 389
-    filter: "(objectClass=person)"
-    attribute:
-      uid.type: 'uid'
-      uid.value: 'uid'
-      name: 'uid'
-      threepid.email: ["{{matrix_ldap_mailattr}}", "mail"]
+      tls: false
+    enabled: true
+    filter: (objectClass=person)
 matrix_url_preview_ip_range_whitelist: []
 matrix_coturn_secret: "supercret64chars"
 matrix_coturn_realm: "{{ansible_domain}}"

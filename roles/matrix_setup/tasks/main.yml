@@ -25,7 +25,7 @@
 - include_role: {name: corpusops.roles/docker_compose_service}
   vars:
     _docker_compose_service:
-      state: restarted
+      state: started
       project: "{{matrix_compose_project}}"
       working_directory: "{{matrix_volumes_hostdir}}"
   tags: [dockercomposeservice]

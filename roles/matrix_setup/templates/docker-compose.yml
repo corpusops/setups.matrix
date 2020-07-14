@@ -96,7 +96,7 @@ services:
     #  - >
     #    apk update && apk add bash
     #    && /mxisd_start.sh
-    volumes: {{matrix_mxisd_volumes| to_nice_json}}
+    volumes: {{matrix_ma1sd_volumes| to_nice_json}}
     ports:
       - "127.0.0.1:{{matrix_mxisd_port}}:8090"
   goneb:
