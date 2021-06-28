@@ -436,11 +436,11 @@ report_stats: {{matrix_report_stats}}
 ## API Configuration ##
 
 # A list of event types that will be included in the room_invite_state
-room_prejoin_state:
-    - "m.room.join_rules"
-    - "m.room.canonical_alias"
-    - "m.room.avatar"
-    - "m.room.name"
+# room_prejoin_state:
+#     - "m.room.join_rules"
+#     - "m.room.canonical_alias"
+#     - "m.room.avatar"
+#     - "m.room.name"
 
 
 # A list of application service config file to use
