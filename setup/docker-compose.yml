@@ -90,6 +90,7 @@ services:
     - "DBNAMES={{matrix_db_name}}"
     - "COMP={{matrix_dbs_compression}}"
     - "KEEP_LASTS={{matrix_keep_dumps}}"
+    - "KEEP_DAYS={{matrix_keep_dumps}}"
     - "KEEP_MONTHES=0"
     - "KEEP_WEEKS=0"
   dimension:
