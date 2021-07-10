@@ -1,5 +1,4 @@
 ---
-- debug: {msg: "{{matrix_docker_dot_env}}"}
 - include_role: {name: corpusops.roles/services_virt_docker}
   tags: [docker_setup]
 - include_tasks: configs.yml
