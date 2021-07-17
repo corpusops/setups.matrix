@@ -119,6 +119,14 @@ map $http_x_forwarded_host $best_http_host {
     set $http_x_forwarded_proto    $http_x_forwarded_proto_resolved;
     set $http_x_forwarded_ssl      $http_x_forwarded_ssl_resolved;
     set $http_x_forwarded_protocol $http_x_forwarded_protocol_resolved;
+
+{{ if has "wk" .blocks }}
+  location ~ ^/.well-known(?<furi>/matrix/(client|server)) {
+    root /nginx/.well-known;
+    types { } default_type "application/json; charset=utf-8";
+    try_files $furi/index.html $furi =404;
+  }
+{{ end }}
 {{ if has "goneb" .blocks }}
 {{ range .goneb_clients | splitList " " }}allow {{.}};{{ end }}
 deny all;
@@ -173,8 +181,8 @@ server {
 }
 {{ end }}
 {{ end }}
-{{ template "vhosts" (merge (dict "server_name" "{{.Env.MATRIX_DOMAIN}}"    "upstream" "web:8448" "upstream_scheme" "https")          $v) }}
+{{ template "vhosts" (merge (dict "server_name" "{{.Env.MATRIX_DOMAIN}}"    "upstream" "web:8448" "upstream_scheme" "https" "blocks" (list "proxy" "wk")) $v) }}
 {{ template "vhosts" (merge (dict "server_name" "{{.Env.DIMENSION_DOMAIN}}" "upstream" "dimension:8184"                    )          $v) }}
-{{ template "vhosts" (merge (dict "server_name" "{{.Env.RIOT_DOMAIN}}"      "upstream" "riot:8080"                         )          $v) }}
-{{ template "vhosts" (merge (dict "server_name" "{{.Env.MXISD_DOMAIN}}"     "upstream" "ma1sd:8090"                        )          $v) }}
+{{ template "vhosts" (merge (dict "server_name" "{{.Env.RIOT_DOMAIN}}"      "upstream" "riot:8080" "blocks" (list "proxy" "wk")   )   $v) }}
+{{ template "vhosts" (merge (dict "server_name" "{{.Env.MXISD_DOMAIN}}"     "upstream" "ma1sd:8090"                       )           $v) }}
 {{ template "vhosts" (merge (dict "server_name" "{{.Env.GONEB_DOMAIN}}"     "upstream" "goneb:4050" "blocks" (list "proxy" "goneb") ) $v) }}
