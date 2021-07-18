@@ -182,7 +182,7 @@ matrix_integrations_url:               ""
 matrix_integrations_api_url:           ""
 matrix_integrations_widgets_urls:      ""
 matrix_integrations_jitsi_widgets_url: ""
-# matrix_integrations_url:                "https://{{matrix_dimension_domain}}/riot"
+# matrix_integrations_url:                "https://{{matrix_dimension_domain}}/element"
 # matrix_integrations_api_url:            "https://{{matrix_dimension_domain}}/api/v1/scalar"
 # matrix_integrations_widgets_urls:      ["https://{{matrix_dimension_domain}}/widgets"]
 # matrix_integrations_jitsi_widgets_url:  "https://{{matrix_dimension_domain}}/widgets/jitsi"
