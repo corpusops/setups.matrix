@@ -1,19 +1,21 @@
 ---
 matrix_image: "corpusops/docker-matrix:v1.15.2-py36"
+matrix_simple_image: "corpusops/docker-matrix:v1.24.0"
 matrix_riot_image: "corpusops/riot:1.6.8"
-matrix_dimension_image: "corpusops/matrix-dimension:latest"
+matrix_simple_riot_image: "corpusops/riot:1.7.16"
+matrix_simple_dimension_image: "corpusops/matrix-dimension:2"
+matrix_dimension_image: "corpusops/matrix-dimension"
 matrix_mxisd_image: kamax/mxisd
 matrix_ma1sd_image: ma1uta/ma1sd
 matrix_pg_image: corpusops/postgresql:9.6.5
+matrix_simple_pg_image: corpusops/postgres:13
 matrix_network: 172.18.0
 matrix_int_ip: "{{matrix_network}}.2"
-matrix_coturn_int_ip: "{{matrix_network}}.9"
 matrix_domain: matrix.foo.net
-matrix_coturn_domain: coturn.foo.net
 matrix_mxisd_domain: matrixid.foo.net
 matrix_riot_domain: riot.foo.net
 matrix_dimension_domain: dimension.foo.net
-matrix_makneb_domain: makneb.foo.net
+matrix_goneb_domain: goneb.foo.net
 matrix_db_password: xxx
 matrix_crt: "{{corpusops_ssl_certs['*.foo.net'][0]}}"
 matrix_key: "{{corpusops_ssl_certs['*.foo.net'][1]}}"
@@ -31,17 +33,18 @@ matrix_ldap_bdn: "dc=foo,dc=org"
 matrix_ldap_mailattr: "shortMail"
 #
 matrix_tid_servers: [matrix.org, vector.im, riot.im]
+matrix_simple_goneb_image: corpusops/go-neb:1
 matrix_goneb_image: corpusops/go-neb
-matrix_backup_image: corpusops/dbsmartbackup:postgres-9.6
+matrix_backup_image: corpusops/dbsmartbackup:postgres-{{matrix_pg_new}}
 matrix_xforwarded: true
-matrix_compose_project: "compose-matrix"
-matrix_coturn_image: corpusops/docker-coturn:4.5.0.7
+matrix_compose_project: "{{matrix_volumes_hostdir|copsf_basename}}"
 matrix_ip: 127.0.0.1
 matrix_http_port: 19000
+matrix_https_port: 19001
 matrix_riot_port: 19002
 matrix_mxisd_port: 19003
-matrix_https_port: 19001
-matrix_makneb_port: 19004
+matrix_tls_port: 8448
+matrix_goneb_port: 19004
 matrix_dimension_port: 19005
 matrix_public_http_port: 80
 matrix_public_https_port: 443
@@ -54,11 +57,11 @@ matrix_pgsql_conf:
       owner: dbuser
 matrix_dbs_compression: nocomp
 matrix_hosts: ["{{matrix_domain}}"]
+matrix_goneb_hosts: ["{{matrix_goneb_domain}}"]
 matrix_dimension_hosts: ["{{matrix_dimension_domain}}"]
 matrix_mxisd_hosts: ["{{matrix_mxisd_domain}}"]
 matrix_riot_hosts: ["{{matrix_riot_domain}}"]
-matrix_makneb_hosts: ["{{matrix_riot_domain}}"]
-matrix_volumes_hostdir: /srv/data/matrix
+matrix_volumes_hostdir: /srv/docker/matrix
 matrix_dimension_data: "{{matrix_volumes_hostdir}}/dimension"
 matrix_dimension_volumes:
   - "{{matrix_dimension_data}}:/data"
@@ -71,10 +74,10 @@ matrix_mxisd_volumes:
 #  - "{{matrix_volumes_hostdir}}/matrix-id-conf/mxisd_start.sh:/mxisd_start.sh"
 matrix_volumes:
   - "{{matrix_volumes_hostdir}}/matrix-data:/data"
-matrix_coturn_volumes:
-  - "{{matrix_volumes_hostdir}}/coturn-data:/data"
 matrix_goneb_volumes:
   - "{{matrix_volumes_hostdir}}/goneb:/data"
+matrix_simple_db_volumes:
+  - "{{matrix_volumes_hostdir}}/pgsql:/var/lib/postgresql/data"
 matrix_db_volumes:
   - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
   - "{{matrix_volumes_hostdir}}/db-reconfigure.yml:/setup/reconfigure.yml:ro"
@@ -138,40 +141,8 @@ matrix_ma1sd:
       tls: false
     enabled: true
     filter: (objectClass=person)
-matrix_url_preview_ip_range_whitelist: []
-matrix_coturn_secret: "supercret64chars"
-matrix_coturn_realm: "{{ansible_domain}}"
-matrix_coturn_crt: "{{matrix_crt}}"
-matrix_coturn_key: "{{matrix_key}}"
-matrix_makneb_clients: [127.0.0.1]
-matrix_url_preview_ip_range_blacklist:
-- '127.0.0.0/8'
-- '10.0.0.0/8'
-- '172.16.0.0/12'
-- '192.168.0.0/16'
-- '100.64.0.0/10'
-- '169.254.0.0/16'
 matrix_externalip: ""
-matrix_coturn: true
-matrix_coturn_port: 3478
-matrix_coturn_altport: 3479
-matrix_coturn_tlsport: 5349
-matrix_coturn_alttlsport: 5350
-matrix_coturn_minport: 49152
-matrix_coturn_maxport: 65535
-matrix_coturn_dh_file: "/data/{{matrix_domain}}.tls.dh"
-matrix_coturn_notcprelay: true
-matrix_coturn_quota: 4000
-matrix_coturn_userquota: 40
-matrix_coturn_deniedip: []
-#- 10.0.0.0-10.255.255.255
-#- 192.168.0.0-192.168.255.255
-#- 172.16.0.0-172.31.255.255
-matrix_coturn_user_lifetime: 86400000
-matrix_turn_uris:
-- "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=udp"
-- "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=tcp"
-matrix_coturn_notls1: true
+matrix_url_preview_ip_range_whitelist: []
 matrix_db_ip: "{{matrix_network}}.8"
 matrix_email:
   enable_notifs: true
@@ -191,7 +162,7 @@ matrix_email:
   notif_template_html: "notif_mail.html"
   notif_template_text: "notif_mail.txt"
 matrix_dimension_hs: "{{matrix_domain}}"
-matrix_dimension_client_server_url: "https://{{matrix_domain}}"
+matrix_dimension_client_server_url: "https://{{matrix_domain}}:8448"
 matrix_dimension_access_token: "xxxxxx"
 matrix_dimension_federation_url: null
 matrix_dimension_media_url: null
@@ -215,3 +186,102 @@ matrix_integrations_jitsi_widgets_url: ""
 # matrix_integrations_api_url:            "https://{{matrix_dimension_domain}}/api/v1/scalar"
 # matrix_integrations_widgets_urls:      ["https://{{matrix_dimension_domain}}/widgets"]
 # matrix_integrations_jitsi_widgets_url:  "https://{{matrix_dimension_domain}}/widgets/jitsi"
+matrix_orig_host: null
+matrix_orig_path: /srv/data/matrix
+matrix_dest_buf: /srv/nobackup/transfert
+matrix_dest_buf_pgsql: "{{matrix_dest_buf}}/pgsql/9.6/main"
+matrix_db_name: db
+matrix_db_port: 5432
+matrix_db_user: dbuser
+matrix_riot_theme:  dark
+matrix_docker_dot_env: |-
+  COMPOSE_PROJECT_NAME={{matrix_compose_project}}
+  POSTGRES_USER={{matrix_db_user}}
+  POSTGRES_PASSWORD={{matrix_db_password}}
+  POSTGRES_HOST={{matrix_db_ip}}
+  POSTGRES_PORT={{matrix_db_port}}
+  POSTGRES_DB={{matrix_db_name}}
+  PGPASSWD={{matrix_db_password}}
+  PGPASSWORD={{matrix_db_password}}
+  DEFAULT_THEME={{matrix_riot_theme}}
+  DEFAULT_HS_URL=https://{{matrix_domain}}
+  DEFAULT_IS_URL=https://{{matrix_mxisd_hosts[0]}}
+  INTEGRATIONS_UI_URL={{matrix_integrations_url}}
+  INTEGRATIONS_REST_URL={{matrix_integrations_api_url}}
+  INTEGRATIONS_WIDGETS_URL={{matrix_integrations_widgets_urls|to_json}}
+  INTEGRATIONS_WIDGETSJITSI_URL={{matrix_integrations_jitsi_widgets_url}}
+  DOCKERIZE_VERSION=v0.6.0
+  MATRIX_DOMAIN={{matrix_domain}}
+  PGLOCALE={{matrix_pg_locale}}
+  PGLOCALES={{matrix_pg_locales}}
+  JITSI={{matrix_jitsi}}
+  GONEB_CLIENTS={{' '.join(matrix_goneb_clients)}}
+  {% set a = matrix_mxisd_hosts + matrix_default_is %}
+  ID_SERVERS={{(a|to_json)}}
+  MATRIX_DOMAIN={{matrix_domain}}
+  MXISD_DOMAIN={{matrix_mxisd_domain}}
+  GONEB_DOMAIN={{matrix_goneb_domain}}
+  RIOT_DOMAIN={{matrix_riot_domain}}
+  DIMENSION_DOMAIN={{matrix_dimension_domain}}
+  NGINX_REAL_IP_FROM={{matrix_real_ip_from}}
+matrix_default_is: [matrix.org, vector.im]
+matrix_real_ip_from: "10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 {{matrix_network}}.0/12"
+matrix_jitsi: jitsi.riot.im
+matrix_keep_dumps: "1"
+matrix_restart_policy: unless-stopped
+matrix_listen_if: 0.0.0.0
+matrix_listen_int_if: 127.0.0.1
+matrix_dcompose: docker-compose -p {{matrix_compose_project}} -f docker-compose.yml
+matrix_pgup_img: tianon/postgres-upgrade:{{matrix_pg_old}}-to-{{matrix_pg_new}}
+matrix_pg_new: 13
+matrix_pg_locales: C.UTF-8 fr_FR.UTF-8 en_US.UTF-8
+matrix_pg_locale: "{{matrix_pg_locales.split()[0]}}"
+matrix_pg_old: 9.6
+matrix_pgold_image: corpusops/postgres:{{matrix_pg_old}}
+matrix_upgrade_pgsl_on_migrate: true
+matrix_traefik_extra: ""
+matrix_goneb_clients: [127.0.0.1]
+matrix_url_preview_ip_range_blacklist:
+- '127.0.0.0/8'
+- '10.0.0.0/8'
+- '172.16.0.0/12'
+- '192.168.0.0/16'
+- '100.64.0.0/10'
+- '169.254.0.0/16'
+#
+# coturn is now disabled
+matrix_coturn: false
+matrix_coturn_secret: "supercret64chars"
+matrix_coturn_realm: "{{ansible_domain}}"
+matrix_coturn_crt: "{{matrix_crt}}"
+matrix_coturn_key: "{{matrix_key}}"
+matrix_coturn_port: 3478
+matrix_coturn_altport: 3479
+matrix_coturn_tlsport: 5349
+matrix_coturn_alttlsport: 5350
+matrix_coturn_minport: 49152
+matrix_coturn_maxport: 50000
+matrix_coturn_dh_file: "/data/{{matrix_domain}}.tls.dh"
+matrix_coturn_notcprelay: true
+matrix_coturn_quota: 4000
+matrix_coturn_userquota: 40
+matrix_registration_key: "FEBjXXCPYRBbSh5KXP3BoCDkd6hKYY4KjXECNtT5abj4Xhmq78pYztsTmEG7nQFByC35RxgYjNhkYMKpG"
+matrix_coturn_deniedip:
+- 10.0.0.0-10.255.255.255
+- 192.168.0.0-192.168.255.255
+- 172.16.0.0-172.31.255.255
+matrix_coturn_user_lifetime: 86400000
+matrix_turn_uris:
+- "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=udp"
+- "turn:{{matrix_domain}}:{{matrix_coturn_port}}?transport=tcp"
+matrix_coturn_notls1: true
+matrix_coturn_image: corpusops/docker-coturn:4.5.0.7
+matrix_simple_coturn_image: corpusops/docker-coturn:4.5.1.3
+matrix_cleanup_old_db: true
+matrix_coturn_domain: coturn.foo.net
+matrix_coturn_int_ip: "{{matrix_network}}.9"
+matrix_coturn_volumes:
+- "{{matrix_volumes_hostdir}}/coturn-data:/data"
+matrix_started_state: started
+matrix_stdout: "null"
+matrix_stderr: "null"

@@ -1,5 +1,5 @@
 ---
-- hosts: "{{riot_servers|default('riot_servers')}}"
+- hosts: "{{matrix_servers|default('matrix_servers')}}"
   roles:
     - {name: matrix_vars, tags: [vars]}
     - {name: matrix_proxy, tags: [proxy]}

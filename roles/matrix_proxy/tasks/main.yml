@@ -8,12 +8,12 @@
     salt-call -lall --retcode-passthrough \
       state.sls makina-states.services.proxy.haproxy
   tags: [haproxy]
-- when: not (matrix_makneb_clients or matrix_coturn)
+- when: not (matrix_goneb_clients or matrix_coturn)
   file:
     state: absent
     dest: /etc/ms_iptables.d/matrix.json
   tags: [ms_iptables]
-- when: matrix_makneb_clients or matrix_coturn
+- when: matrix_goneb_clients or matrix_coturn
   block:
   - template:
       dest: /etc/ms_iptables.d/matrix.json

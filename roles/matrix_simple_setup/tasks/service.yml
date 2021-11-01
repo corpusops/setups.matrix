@@ -1,0 +1,14 @@
+- include_role:
+    name: corpusops.roles/docker_compose_service
+  vars:
+    _docker_compose_service:
+      project: "{{matrix_compose_project}}"
+      state: "{{matrix_started_state}}"
+      working_directory: "{{matrix_volumes_hostdir}}"
+      stdout: "{{matrix_stdout}}"
+      stderr: "{{matrix_stderr}}"
+- shell: |-
+    set -ex
+    cd "{{matrix_volumes_hostdir}}"
+    docker-compose -p {{matrix_compose_project}} up -d
+  tags: [matrix_restart_services]

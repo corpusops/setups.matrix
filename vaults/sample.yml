@@ -1,6 +1,7 @@
 ---
 matrix_domain: matrix.foo.net
 matrix_mxisd_domain: matrixid.foo.net
+matrix_goneb_domain: goneb.foo.net
 matrix_riot_domain: riot.foo.net
 matrix_db_password: xxx
 matrix_crt: "{{corpusops_ssl_certs['*.foo.net'][0]}}"
@@ -20,6 +21,6 @@ matrix_ldap_mailattr: "shortMail"
 matrix_admin:
   login: admin
   password: xxx
-matrix_makneb_clients:
+matrix_goneb_clients:
 - 127.0.0.1
 - 1.2.3.4

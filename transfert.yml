@@ -1,0 +1,6 @@
+- hosts: ["{{matrix_transfert}}"]
+  tasks:
+  - include_role: {name: matrix_transfert}
+    tags: [xfer]
+  - include_role: {name: matrix_simple_setup}
+    tags: [reconfigure]

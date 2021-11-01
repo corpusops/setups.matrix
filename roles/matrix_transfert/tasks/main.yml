@@ -1,0 +1,10 @@
+---
+- shell: |-
+    cd {{matrix_volumes_hostdir}}
+    systemctl stop {{matrix_compose_project}} || /bin/true
+    docker-compose stop -t 0
+  tags: [xfer_stop]
+- include_tasks: xfer.yml
+  tags: [xfer_xfer]
+- include_tasks: xfer_pg.yml
+  tags: [xfer_pg]

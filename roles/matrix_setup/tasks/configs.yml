@@ -34,15 +34,6 @@
 - template:
     src: "{{item}}"
     force: true
-    dest: "{{matrix_volumes_hostdir}}/coturn-data/{{item}}"
-    mode: "{{{}.get(item, '0644')}}"
-    trim_blocks: false
-  with_items:
-    - turnserver.conf
-
-- template:
-    src: "{{item}}"
-    force: true
     dest: "{{matrix_volumes_hostdir}}/matrix-data/{{item}}"
     mode: "{{{}.get(item, '0644')}}"
     trim_blocks: false
@@ -67,24 +58,6 @@
     trim_blocks: false
   with_items:
     - ma1sd.yaml
-
-- copy:
-    content: "{{matrix_dh}}"
-    force: true
-    mode: 0644
-    dest: "{{matrix_volumes_hostdir}}/coturn-data/tls.dh"
-
-- copy:
-    content: "{{matrix_coturn_crt}}"
-    force: true
-    mode: 0644
-    dest: "{{matrix_volumes_hostdir}}/coturn-data/coturn.ssl.crt"
-
-- copy:
-    content: "{{matrix_coturn_key}}"
-    force: true
-    mode: 0644
-    dest: "{{matrix_volumes_hostdir}}/coturn-data/coturn.ssl.key"
 
 - copy:
     content: "{{matrix_crt}}"
@@ -116,3 +89,6 @@
     content: |
       {{matrix_pgsql_conf|to_nice_json}}
     force: true
+
+- include_tasks: coturn.yml
+  when: matrix_coturn

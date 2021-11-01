@@ -1,0 +1,13 @@
+- name: sync pgsql for upgrade
+  shell: >
+    rsync -av --delete
+    {{matrix_dest_buf_pgsql}}/
+    "{{matrix_volumes_hostdir}}/nobackup/pgsql/"
+    --exclude=pg_hba.conf
+    --exclude=pg_ident.conf
+    --exclude=postgresql.conf
+    --exclude=postmaster.opts
+    --exclude=postmaster.pid
+- name: mark pgsql as to be upgraded
+  shell: touch {{matrix_volumes_hostdir}}/nobackup/pgsql/toupgrade
+  when: matrix_upgrade_pgsl_on_migrate

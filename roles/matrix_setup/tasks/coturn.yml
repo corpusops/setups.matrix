@@ -1,0 +1,26 @@
+- template:
+    src: "{{item}}"
+    force: true
+    dest: "{{matrix_volumes_hostdir}}/coturn-data/{{item}}"
+    mode: "{{{}.get(item, '0644')}}"
+    trim_blocks: false
+  with_items:
+    - turnserver.conf
+- copy:
+    content: "{{matrix_dh}}"
+    force: true
+    mode: 0644
+    dest: "{{matrix_volumes_hostdir}}/coturn-data/tls.dh"
+
+- copy:
+    content: "{{matrix_coturn_crt}}"
+    force: true
+    mode: 0644
+    dest: "{{matrix_volumes_hostdir}}/coturn-data/coturn.ssl.crt"
+
+- copy:
+    content: "{{matrix_coturn_key}}"
+    force: true
+    mode: 0644
+    dest: "{{matrix_volumes_hostdir}}/coturn-data/coturn.ssl.key"
+

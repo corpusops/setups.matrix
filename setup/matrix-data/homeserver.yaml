@@ -1,3 +1,5 @@
+# {{ansible_managed}}
+suppress_key_server_warning: true
 # vim:ft=yaml
 # PEM encoded X509 certificate for TLS.
 # You can replace the self-signed certificate that synapse
@@ -370,7 +372,7 @@ recaptcha_siteverify_api: "https://www.google.com/recaptcha/api/siteverify"
 
 
 ## Turn ##
-{% set turnc = matrix_coturn and '' or '# ' %}
+{% set turnc = '# ' %}
 
 # The public URIs of the TURN server to give to clients
 {{turnc}}turn_uris: {{matrix_turn_uris|to_json}}
@@ -392,7 +394,7 @@ recaptcha_siteverify_api: "https://www.google.com/recaptcha/api/siteverify"
 # However, it does introduce a slight security risk as it allows users to
 # connect to arbitrary endpoints without having first signed up for a
 # valid account (e.g. by passing a CAPTCHA).
-{{turnc}}turn_allow_guests: True
+turn_allow_guests: True
 
 
 ## Registration ##

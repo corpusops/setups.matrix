@@ -1,0 +1,4 @@
+---
+- hosts: "{{matrix_servers|default('matrix_docker_servers')}}"
+  roles:
+  - {name: matrix_simple_setup, tags: [setup]}
