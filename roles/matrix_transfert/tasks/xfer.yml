@@ -1,0 +1,19 @@
+- name: tmpsync
+  shell: >
+    rsync -azv --delete
+    {{matrix_orig_host}}:{{matrix_orig_path}}/ {{matrix_dest_buf}}/
+    --exclude=backup --exclude=db-reconfigure.yml --exclude=config.json
+- name: sync
+  shell: >
+    rsync -av {{matrix_dest_buf}}/{{item}} {{matrix_volumes_hostdir}}/{{item}}
+    --exclude=.git
+  loop:
+  - matrix-data/
+  - coturn-data/
+  - matrix-id-conf/
+  - goneb/
+  - dimension/
+  - matrix-id/
+- file:
+    state: directory
+    path: "{{matrix_volumes_hostdir}}/nobackup/pgsql/{{matrix_pg_old}}"

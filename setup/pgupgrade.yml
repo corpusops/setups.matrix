@@ -1,0 +1,14 @@
+---
+# {{ansible_managed}}
+version: '3.7'
+services:
+  olddb:
+    networks: {app_net: {ipv4_address: "{{matrix_network}}.99"}}
+    env_file: [.env]
+    image: "{{matrix_pgold_image}}"
+    volumes:
+    - "{{matrix_volumes_hostdir}}/nobackup/pgsql:/var/lib/postgresql/data"
+    - "./:/host"
+  db:
+    volumes:
+    - "./:/host"

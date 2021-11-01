@@ -13,6 +13,7 @@ services:
     security_opt: ["seccomp=unconfined"]
     hostname: "{{matrix_domain}}"
     volumes: {{ matrix_db_volumes | to_nice_json }}
+{% if matrix_coturn %}
   coturn:
     networks: {app_net: {ipv4_address: "{{matrix_coturn_int_ip}}"}}
     extra_hosts:
@@ -36,11 +37,14 @@ services:
         set -ex;
         exec ./start.sh start
     volumes: {{ matrix_coturn_volumes | to_nice_json }}
+{% endif %}
   web:
     networks: {app_net: {ipv4_address: "{{matrix_int_ip}}"}}
     extra_hosts:
     - "{{matrix_domain}}:{{matrix_int_ip}}"
+{% if matrix_coturn %}
     - "{{matrix_coturn_domain}}:{{matrix_coturn_int_ip}}"
+{% endif %}
     image: "{{matrix_image}}"
     restart: always
     hostname: "{{matrix_domain}}"
@@ -61,6 +65,7 @@ services:
         if [ -f /ready ] ;then rm -f /ready;fi;
         ( set +ex;while true;do echo 'select 1'
         |psql -vON_ERROR_STOP=1
+
         'postgres://dbuser:{{matrix_db_password}}@db:5432/db'
         && touch /ready && break;
         sleep 1; echo retry db;done; )&
@@ -68,6 +73,7 @@ services:
         exec ./start.sh start
     volumes: {{  matrix_volumes |to_nice_json }}
   riot:
+
     image: "{{matrix_riot_image}}"
     restart: always
     hostname: "{{matrix_riot_hosts[0]}}"
@@ -106,7 +112,7 @@ services:
       - "BASE_URL=http://localhost:4050"
     restart: always
     ports:
-      - "{{matrix_makneb_port}}:4050"
+      - "{{matrix_goneb_port}}:4050"
     volumes: {{matrix_goneb_volumes| to_nice_json}}
   backup:
     image: "{{matrix_backup_image}}"

@@ -1,0 +1,42 @@
+---
+- set_fact:
+    matrix_host_dirs: |
+        {% set directories = [] %}
+        {% for matrix_volume in matrix_volumes %}
+        {% set d = matrix_volume.split(':')[0] %}
+        {% set _ = directories.append(d) %}
+        {% endfor %}
+        {{ directories | to_json }}
+- file:
+    path: "{{item}}"
+    mode: "0711"
+    state: directory
+  with_items: "{{matrix_host_dirs}}"
+
+
+- name: Create directories
+  file:
+    path: "{{matrix_volumes_hostdir}}/{{ item.path }}"
+    state: directory
+    mode: '{{ item.mode }}'
+  with_filetree: "{{playbook_dir}}/setup/"
+  when: item.state == 'directory'
+- name: Template files
+  template:
+    src: '{{ item.src }}'
+    dest: "{{matrix_volumes_hostdir}}/{{ item.path }}"
+    mode: '{{ item.mode }}'
+    trim_blocks: false
+  with_filetree: "{{playbook_dir}}/setup/"
+  when:
+  - "item.state == 'file'"
+  - "not item.path|regex_search('\\.frep$|conf.d')"
+- name: Copy files
+  copy:
+    src: '{{ item.src }}'
+    dest: "{{matrix_volumes_hostdir}}/{{ item.path }}"
+    mode: '{{ item.mode }}'
+  with_filetree: "{{playbook_dir}}/setup/"
+  when:
+  - "item.state == 'file'"
+  - "item.path|regex_search('\\.frep$|conf.d')"

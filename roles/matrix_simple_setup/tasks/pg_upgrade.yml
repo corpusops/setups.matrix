@@ -1,0 +1,38 @@
+- stat: {path: "{{matrix_volumes_hostdir}}/nobackup/pgsql/toupgrade"}
+  register: pguptestf
+- when: pguptestf.stat.exists
+  block:
+  - name: start old and new pg cluster
+    shell: |-
+      set -ex
+      cd {{matrix_volumes_hostdir}}
+      dc="{{matrix_dcompose}} -f pgupgrade.yml"
+      rm -rf pgsql || /bin/true
+      cp -fv pgconf/* {{matrix_volumes_hostdir}}/nobackup/pgsql/
+      $dc stop -t 0
+      $dc up --no-deps -d --force-recreate  olddb db
+      while ! ( \
+        echo 'select 1'|$dc exec -T olddb psql -vON_ERROR_STOP=1 \
+          'postgres://{{matrix_db_user}}:{{matrix_db_password}}@127.0.0.1:5432/{{matrix_db_name}}' );do sleep 1;done
+      while ! ( \
+        echo 'select 1'|$dc exec -T db    psql -vON_ERROR_STOP=1 \
+          'postgres://{{matrix_db_user}}:{{matrix_db_password}}@127.0.0.1:5432/{{matrix_db_name}}' );do sleep 1;done
+    tags: [pgupgrade_startdb]
+  - name: upgrade pgsql
+    shell: |-
+      set -ex
+      cd {{matrix_volumes_hostdir}}
+      {{matrix_dcompose}} -f pgupgrade.yml exec -T db /host/pgconf/upgrade.sh
+      rm -f "{{matrix_volumes_hostdir}}/nobackup/pgsql/toupgrade"
+  - shell: |-
+      set -ex
+      cd {{matrix_volumes_hostdir}}
+      {{matrix_dcompose}} -f pgupgrade.yml stop  olddb db
+      {{matrix_dcompose}} -f pgupgrade.yml rm -f olddb db
+- shell: |-
+    cd {{matrix_volumes_hostdir}}
+    cp -fv pgconf/* pgsql/
+- file:
+    state: absent
+    path: "{{matrix_volumes_hostdir}}/nobackup/pgsql"
+  when: matrix_cleanup_old_db
