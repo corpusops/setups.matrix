@@ -1,8 +1,8 @@
 ---
-matrix_image: "corpusops/docker-matrix:v1.15.2-py36"
-matrix_simple_image: "corpusops/docker-matrix:v1.26.0"
-matrix_riot_image: "corpusops/riot:1.6.8"
-matrix_simple_riot_image: "corpusops/riot:1.7.20"
+matrix_image: "corpusops/docker-matrix:v1.36.0"
+matrix_simple_image: "{{matrix_image}}"
+matrix_riot_image: "corpusops/riot:1.7.31"
+matrix_simple_riot_image: "{{matrix_riot_image}}"
 matrix_simple_dimension_image: "corpusops/matrix-dimension:2"
 matrix_dimension_image: "corpusops/matrix-dimension"
 matrix_mxisd_image: kamax/mxisd

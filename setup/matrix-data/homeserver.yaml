@@ -436,7 +436,7 @@ report_stats: {{matrix_report_stats}}
 ## API Configuration ##
 
 # A list of event types that will be included in the room_invite_state
-room_invite_state_types:
+room_prejoin_state:
     - "m.room.join_rules"
     - "m.room.canonical_alias"
     - "m.room.avatar"
