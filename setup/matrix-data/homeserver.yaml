@@ -602,3 +602,4 @@ enable_group_creation: {{matrix_enable_group_creation}}
 {% if matrix_email.enable_notifs %}
 email: {{matrix_email|to_json}}
 {% endif %}
+templates.custom_template_directory: /data/res/templates
