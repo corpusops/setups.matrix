@@ -1,7 +1,7 @@
 ---
-matrix_image: "corpusops/docker-matrix:v1.36.0"
+matrix_image: "corpusops/docker-matrix:v1.42.0"
 matrix_simple_image: "{{matrix_image}}"
-matrix_riot_image: "corpusops/riot:1.7.31"
+matrix_riot_image: "corpusops/riot:1.8.2"
 matrix_simple_riot_image: "{{matrix_riot_image}}"
 matrix_simple_dimension_image: "corpusops/matrix-dimension:2"
 matrix_dimension_image: "corpusops/matrix-dimension"
@@ -158,7 +158,6 @@ matrix_email:
   # copy the content of
   # -> https://github.com/matrix-org/synapse/tree/master/res
   # to /data volume
-  template_dir: "/data/res/templates"
   notif_template_html: "notif_mail.html"
   notif_template_text: "notif_mail.txt"
 matrix_dimension_hs: "{{matrix_domain}}"
@@ -227,7 +226,7 @@ matrix_docker_dot_env: |-
 matrix_default_is: [matrix.org, vector.im]
 matrix_real_ip_from: "10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 {{matrix_network}}.0/12"
 matrix_jitsi: jitsi.riot.im
-matrix_keep_dumps: "1"
+custom_template_directory: matrix_keep_dumps: "1"
 matrix_restart_policy: unless-stopped
 matrix_listen_if: 0.0.0.0
 matrix_listen_int_if: 127.0.0.1
