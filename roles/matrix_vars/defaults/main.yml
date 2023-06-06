@@ -1,5 +1,5 @@
 ---
-matrix_image: "corpusops/docker-matrix:v1.84.1"
+matrix_image: "corpusops/docker-matrix:v1.85.0"
 matrix_riot_image: "corpusops/riot:1.11.31"
 matrix_simple_image: "{{matrix_image}}"
 matrix_simple_riot_image: "{{matrix_riot_image}}"
