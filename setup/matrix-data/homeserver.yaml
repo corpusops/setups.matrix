@@ -182,6 +182,7 @@ database:
   # The database engine name
   name: "psycopg2"
   # Arguments to pass to the engine
+  allow_unsafe_locale: true
   args:
     user: "{{matrix_pgsql_conf['cops_postgresql__roles'][0].name}}"
     password: "{{matrix_pgsql_conf['cops_postgresql__roles'][0].password}}"
