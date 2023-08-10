@@ -1,7 +1,7 @@
 ---
-matrix_image: "corpusops/docker-matrix:v1.49.2"
+matrix_image: "corpusops/docker-matrix:v1.51.0"
 matrix_simple_image: "{{matrix_image}}"
-matrix_riot_image: "corpusops/riot:1.9.8"
+matrix_riot_image: "corpusops/riot:1.10.0"
 matrix_simple_riot_image: "{{matrix_riot_image}}"
 matrix_simple_dimension_image: "corpusops/matrix-dimension:2"
 matrix_dimension_image: "corpusops/matrix-dimension"
