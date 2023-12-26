@@ -11,7 +11,7 @@ networks:
     driver: bridge
     ipam: {driver: default, config: [{subnet: "{{matrix_network}}.0/24"}]}
 services:
-  db:
+  db: &db
     <<: [ *env, *restart ]
     networks: {app_net: {ipv4_address: "{{matrix_network}}.8"}}
     image: "{{matrix_simple_pg_image}}"
@@ -19,7 +19,7 @@ services:
     volumes: {{ matrix_simple_db_volumes|to_json }}
     # matrix makes mandatory of C locale
     environment: [LANG=C.UTF-8, LC_ALL=C.UTF-8]
-  web:
+  web: &web
     <<: [ *env, *restart ]
     networks: {app_net: {ipv4_address: "{{matrix_int_ip}}"}}
     extra_hosts:
@@ -41,7 +41,7 @@ services:
         && touch /ready && break;
         sleep 1; echo retry db;done; )&
         dockerize -wait "file:///ready" -timeout 300s;
-        exec ./start.sh start
+        exec ./start.py
     volumes: {{matrix_volumes|to_json}}
   riot:
     <<: [ *env, *restart ]
