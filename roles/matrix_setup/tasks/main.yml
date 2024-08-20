@@ -28,4 +28,4 @@
       state: restarted
       project: "{{matrix_compose_project}}"
       working_directory: "{{matrix_volumes_hostdir}}"
-  tags: [dockercomposeservice]
+  tags: [matrix_service, dockercomposeservice]

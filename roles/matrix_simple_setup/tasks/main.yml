@@ -3,7 +3,7 @@
   tags: [docker_setup]
 - include_tasks: configs.yml
   tags: [configs, matrix_configs]
-- include_tasks: pg_upgrade.yml
-  tags: [pg_upgrade, matrix_pg_upgrade]
+#- include_tasks: pg_upgrade.yml
+#  tags: [pg_upgrade, matrix_pg_upgrade]
 - include_tasks: service.yml
   tags: [service, matrix_service]
